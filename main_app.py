@@ -1,25 +1,17 @@
 """
-main_app.py – QualiTheme v3.1: Universal Thematic Analysis App
-
-Fixes vs v3.0:
-  - st.stop() inside tab blocks replaced with early-return guards
-    (st.stop() inside a tab halts the entire Streamlit script, breaking
-     other tabs that have already rendered)
-  - html.escape() applied to all user-supplied strings interpolated into
-    unsafe_allow_html markup (XSS hardening)
-  - Filenames sanitised before display
-  - st.query_params.pop() used instead of deprecated del st.query_params[key]
-  - participant_id editing now triggers st.rerun() so metric row updates
-  - Added @st.cache_data on codebook generation per transcript to avoid
-    redundant computation on every re-render
-  - Sidebar domain select stored to session state correctly
-  - Upload limit check fixed: allows exact limit (>= instead of >)
-  - Minor UX: "Jump to next uncoded" button shows participant count badge
+main_app.py – QualiTheme v3.4: Universal Thematic Analysis App
 
 Run with:  streamlit run main_app.py
 """
 
 from __future__ import annotations
+
+# ── Matplotlib backend MUST be set before any other import that touches
+# matplotlib. On Streamlit Cloud there is no display environment, so the
+# default backend (TkAgg / Qt5Agg) raises "cannot connect to X server".
+# Setting Agg here guarantees it wins regardless of import order.
+import matplotlib
+matplotlib.use("Agg")
 
 import html as _html
 import re
