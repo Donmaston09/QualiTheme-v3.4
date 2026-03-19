@@ -12,3 +12,8 @@ enableXsrfProtection = true
 
 [browser]
 gatherUsageStats = false
+
+[runner]
+# Ensures matplotlib uses the Agg (non-interactive) backend on Cloud.
+# Prevents "cannot connect to X server" errors in headless environments.
+magicEnabled = false
