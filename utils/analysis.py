@@ -26,7 +26,13 @@ from typing import Any
 import numpy as np
 import pandas as pd
 import matplotlib
-matplotlib.use("Agg")
+# Use Agg backend (non-interactive, no display required).
+# switch_backend is safe to call even if already set to Agg — avoids the
+# UserWarning that matplotlib.use() emits when called after pyplot import.
+try:
+    matplotlib.use("Agg")
+except Exception:
+    pass
 import matplotlib.pyplot as plt
 import seaborn as sns
 import networkx as nx
