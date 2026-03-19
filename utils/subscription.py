@@ -88,15 +88,28 @@ TIERS: dict[str, dict] = {
 }
 
 # ---------------------------------------------------------------------------
-# Promo codes — sha-256 hashed (plaintext never stored)
-# Add new codes by appending hashlib.sha256(b"CODE".upper()).hexdigest()
+# Promo codes — loaded from Streamlit secrets at runtime, never in source code
+#
+# In your Streamlit Cloud secrets (or .streamlit/secrets.toml locally), add:
+#   PROMO_CODES = "YOURCODE1,YOURCODE2,YOURCODE3"
+#
+# Codes are comma-separated, case-insensitive, and hashed on load.
+# To add or revoke a code, just update the secret — no code change or
+# redeployment needed.
 # ---------------------------------------------------------------------------
 
-_VALID_CODES: frozenset[str] = frozenset({
-    hashlib.sha256(b"QUALITHEME10").hexdigest(),
-    hashlib.sha256(b"PROMO2025").hexdigest(),
-    hashlib.sha256(b"RESEARCH10").hexdigest(),
-})
+def _load_valid_codes() -> frozenset[str]:
+    """
+    Load promo codes from secrets at runtime and return their SHA-256 hashes.
+    Falls back to an empty set if the secret is not configured — which means
+    no promo codes work, which is the safe default for a public deployment.
+    """
+    raw = _get_secret("PROMO_CODES")
+    if not raw:
+        return frozenset()
+    codes = [c.strip().upper() for c in raw.split(",") if c.strip()]
+    return frozenset(hashlib.sha256(c.encode()).hexdigest() for c in codes)
+
 
 # Maximum promo-code attempts per session before rate-limiting kicks in
 _MAX_CODE_ATTEMPTS: int = 5
@@ -304,10 +317,19 @@ def feature_allowed(feature: str) -> bool:
 # ---------------------------------------------------------------------------
 
 def verify_payment(code: str) -> bool:
-    """Return True if the supplied promo code is valid (constant-time compare)."""
+    """
+    Return True if the supplied promo code is valid.
+    Codes are loaded from Streamlit secrets at call time — never cached in
+    module scope — so rotating or revoking codes takes effect immediately
+    without a redeployment.
+    Uses hmac.compare_digest for constant-time comparison to prevent
+    timing-based enumeration of valid codes.
+    """
     h = hashlib.sha256(code.strip().upper().encode()).hexdigest()
-    # Use hmac.compare_digest to prevent timing-based enumeration of valid codes
-    return any(hmac.compare_digest(h, valid) for valid in _VALID_CODES)
+    valid_codes = _load_valid_codes()
+    if not valid_codes:
+        return False
+    return any(hmac.compare_digest(h, valid) for valid in valid_codes)
 
 
 def upgrade_to_pro(code: str) -> tuple[bool, str]:
@@ -431,7 +453,7 @@ def render_subscription_widget() -> None:
                 "Enter code:",
                 key="promo_code_input",
                 max_chars=64,
-                placeholder="e.g. QUALITHEME10 or your access token",
+                placeholder="Enter your promo code or access token",
                 disabled=rate_limited,
             )
             btn_type = "secondary" if has_stripe else "primary"
@@ -457,12 +479,10 @@ def render_subscription_widget() -> None:
                 else:
                     st.warning("Please enter a code.")
 
-            # Show demo codes ONLY in dev mode
+            # Show actual codes only in dev mode — never on production
             if _is_dev_mode():
-                st.caption(
-                    "🔧 Dev mode — demo codes: "
-                    "`QUALITHEME10` · `PROMO2025` · `RESEARCH10`"
-                )
+                dev_codes = _get_secret("PROMO_CODES") or "(none configured)"
+                st.caption(f"🔧 Dev mode — configured codes: `{dev_codes}`")
         else:
             st.error(
                 "Too many invalid attempts this session. "
