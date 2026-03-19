@@ -365,9 +365,74 @@ def _render_theme_legend(colour_map: dict[str, dict]) -> str:
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown(
-        "<h2 style='color:#1F77B4;margin-bottom:0'>🔍 QualiTheme</h2>"
-        "<p style='color:#666;font-size:0.85em;margin-top:2px'>"
-        "Universal Thematic Analysis</p>",
+        """
+        <div style="
+            background: linear-gradient(135deg, #0D4A7A 0%, #1F77B4 55%, #2d9cdb 100%);
+            border-radius: 12px;
+            padding: 22px 18px 18px 18px;
+            margin-bottom: 6px;
+            position: relative;
+            overflow: hidden;
+        ">
+            <!-- Decorative background circles -->
+            <div style="
+                position:absolute; top:-28px; right:-28px;
+                width:110px; height:110px; border-radius:50%;
+                background:rgba(255,255,255,0.07);
+                pointer-events:none;
+            "></div>
+            <div style="
+                position:absolute; bottom:-20px; left:-20px;
+                width:80px; height:80px; border-radius:50%;
+                background:rgba(255,255,255,0.05);
+                pointer-events:none;
+            "></div>
+            <!-- Decorative dot grid -->
+            <div style="
+                position:absolute; top:0; left:0; right:0; bottom:0;
+                background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+                background-size: 18px 18px;
+                pointer-events:none;
+            "></div>
+            <!-- Content -->
+            <div style="position:relative; z-index:1;">
+                <div style="font-size:2em; margin-bottom:4px;">🔍</div>
+                <div style="
+                    color:white; font-size:1.35em;
+                    font-weight:700; line-height:1.2;
+                    letter-spacing:-0.3px;
+                ">QualiTheme</div>
+                <div style="
+                    color:rgba(255,255,255,0.78);
+                    font-size:0.78em; margin-top:4px;
+                    font-weight:400; letter-spacing:0.3px;
+                ">Universal Thematic Analysis</div>
+                <div style="
+                    margin-top:12px;
+                    display:flex; gap:6px; flex-wrap:wrap;
+                ">
+                    <span style="
+                        background:rgba(255,255,255,0.15);
+                        color:rgba(255,255,255,0.9);
+                        border-radius:20px; padding:2px 9px;
+                        font-size:0.7em; font-weight:600;
+                    ">AI-powered</span>
+                    <span style="
+                        background:rgba(255,255,255,0.15);
+                        color:rgba(255,255,255,0.9);
+                        border-radius:20px; padding:2px 9px;
+                        font-size:0.7em; font-weight:600;
+                    ">Multi-participant</span>
+                    <span style="
+                        background:rgba(255,255,255,0.15);
+                        color:rgba(255,255,255,0.9);
+                        border-radius:20px; padding:2px 9px;
+                        font-size:0.7em; font-weight:600;
+                    ">Audio &amp; Video</span>
+                </div>
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
     st.markdown("---")
