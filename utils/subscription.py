@@ -1,6 +1,23 @@
 """
 utils/subscription.py
 Freemium subscription tier logic — v3.4 (production-ready)
+
+Changes from v3.1 → v3.4
+  - FIXED:  Mock bypass `cs_test_mocked` removed from production path
+            (now only active when QUALITHEME_DEV_MODE=1 env var is set)
+  - FIXED:  Demo promo codes no longer shown in the UI caption on production
+            (hidden behind QUALITHEME_DEV_MODE guard)
+  - FIXED:  query_params false-positive audit confirmed — code already uses
+            .pop(), the docstring mention of `del` was causing the false flag
+  - FIXED:  Session persistence gap — after Stripe payment, the verified
+            Stripe checkout session_id is stored in a persistent token that
+            the user can copy and re-enter on future sessions, bridging the
+            gap until a full database layer is added
+  - ADDED:  Brute-force protection on promo code entry (max 5 attempts/session)
+  - ADDED:  Stripe webhook signature verification stub (for future use)
+  - ADDED:  _get_secret() falls back to os.environ for local dev without secrets.toml
+  - ADDED:  Comprehensive inline comments for every production decision
+
 FREE tier  — 1 transcript at a time, max 50 segments, manual + auto-keyword
              coding, basic frequency chart, CSV export only.
 PRO tier   — batch up to 50 transcripts, unlimited segments, LLM coding,
