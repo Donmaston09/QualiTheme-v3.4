@@ -370,10 +370,13 @@ def render_subscription_widget() -> None:
     # ── Free plan badge ──────────────────────────────────────────────────
     cfg = TIERS["free"]
     st.sidebar.markdown(
-        f"<div style='background:#f0f4ff;border:1px solid #b0c4de;"
-        f"padding:10px 12px;border-radius:8px;'>"
-        f"<b>🆓 Free Plan</b><br>"
-        f"<small>"
+        f"<div style='"
+        f"background:rgba(31,119,180,0.12);"
+        f"border:1px solid rgba(31,119,180,0.35);"
+        f"padding:10px 12px;border-radius:8px;"
+        f"color:inherit;'>"
+        f"<b style='color:#5ba3d9;'>🆓 Free Plan</b><br>"
+        f"<small style='opacity:0.85;'>"
         f"Transcripts: <b>1 at a time</b><br>"
         f"Max segments: <b>{cfg['max_segments']}</b><br>"
         f"Exports: CSV only<br>"
