@@ -1,4 +1,1 @@
-# packages.txt — system-level apt packages installed on Streamlit Cloud
-# Required for local Whisper video transcription (audio extraction from video files)
-# Safe to include even if using API-only backend — ffmpeg is small (~30 MB)
 ffmpeg
