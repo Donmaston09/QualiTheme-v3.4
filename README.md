@@ -83,42 +83,6 @@ streamlit run main_app.py
 
 Open **http://localhost:8501**.
 
----
-
-## Deploying to Streamlit Community Cloud
-
-1. Push this folder to a **public GitHub repository**
-2. Go to [share.streamlit.io](https://share.streamlit.io) → sign in → New app
-3. Select repo / branch / `main_app.py`
-4. **App Settings → Secrets** — paste your keys in TOML format:
-
-```toml
-STRIPE_API_KEY          = "sk_live_..."
-STRIPE_PAYMENT_LINK     = "https://buy.stripe.com/..."
-QUALITHEME_TOKEN_SECRET = "your-32-char-random-string"
-```
-
-5. Click **Deploy** — live in ~3 minutes
-
-> Generate `QUALITHEME_TOKEN_SECRET` with:
-> `python3 -c "import secrets; print(secrets.token_hex(32))"`
-
----
-
-## Stripe Payment Flow
-
-After a user pays, Stripe redirects to:
-```
-https://your-app.streamlit.app/?session_id={CHECKOUT_SESSION_ID}
-```
-
-The app verifies the payment server-side, upgrades to Pro, issues a signed HMAC access token, and shows it to the user. They can save and re-enter this token on future sessions to restore Pro access without re-paying.
-
-**Demo promo codes** (visible only when `QUALITHEME_DEV_MODE=1`):
-- `QUALITHEME10`  ·  `PROMO2025`  ·  `RESEARCH10`
-
----
-
 ## Audio/Video Transcription
 
 Uses **faster-whisper** (MIT licence, open-source, no API key needed):
@@ -155,20 +119,5 @@ The report includes an AI-written narrative (or a data-driven fallback if no LLM
 
 Users supply their own API key at runtime. Keys are held in Streamlit session state only — never written to disk, never logged.
 
----
-
-## Security Notes
-
-- XSS: all user strings escaped with `html.escape()` before `unsafe_allow_html` blocks
-- Filenames sanitised before display or use
-- File uploads capped at 10 MB (ingestion) and 200 MB (transcription)
-- Stripe session IDs verified server-side — never trusted from URL alone
-- Pro status persists via HMAC-signed access tokens (no database required)
-- Promo code brute-force limited to 5 attempts per session
-- Mock payment bypass gated behind `QUALITHEME_DEV_MODE=1` env var
-- `.gitignore` blocks `secrets.toml` and all `.env` files
-- `enableXsrfProtection = true` in `.streamlit/config.toml`
-
----
-
-QualiTheme v3.4 · Built with Streamlit · © Anthony Onoja, PhD · University of Surrey
+----
+QualiTheme v3.4 · Built with Streamlit · © Anthony Onoja, PhD · University of Surrey, Email: a.onoja@surrey.ac.uk
