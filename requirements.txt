@@ -1,0 +1,49 @@
+# ── QualiTheme v3.3 — requirements.txt ────────────────────────────────────────
+# Reproducible Streamlit Cloud deploys — pin major+minor, allow patch updates.
+
+# Core UI
+streamlit>=1.37.0,<2.0.0
+
+# Data
+pandas>=2.0.0,<3.0.0
+numpy>=1.24.0,<2.0.0
+openpyxl>=3.1.0,<4.0.0
+
+# NLP / ML
+sentence-transformers>=2.7.0,<4.0.0
+scikit-learn>=1.4.0,<2.0.0
+
+# Visualisation
+matplotlib>=3.8.0,<4.0.0
+seaborn>=0.13.0,<1.0.0
+networkx>=3.2.0,<4.0.0
+wordcloud>=1.9.0,<2.0.0
+
+# Document parsing & export
+python-docx>=1.1.0,<2.0.0
+pdfplumber>=0.11.0,<1.0.0
+chardet>=5.2.0,<6.0.0
+
+# LLM providers (for theme labels + AI report — user supplies API key at runtime)
+anthropic>=0.28.0,<1.0.0
+openai>=1.30.0,<2.0.0
+google-generativeai>=0.5.0,<1.0.0
+
+# ── Audio / Video Transcription ────────────────────────────────────────────────
+# 100% open-source, no API key required. Everything runs locally.
+#
+# Option A — faster-whisper (RECOMMENDED)
+#   3-4x faster than openai-whisper on CPU; same Whisper accuracy; MIT licence.
+#   Uses CTranslate2 int8 quantisation — ~50% lower memory than original Whisper.
+faster-whisper>=1.0.0,<2.0.0
+#
+# Option B — openai-whisper (fallback, used automatically if faster-whisper absent)
+#   Original implementation from OpenAI (MIT licence). Uncomment ONLY if
+#   faster-whisper causes build issues on your platform.
+# openai-whisper>=20231117
+#
+# NOTE: also add 'ffmpeg' to packages.txt — required for video files and
+# most compressed audio formats (mp3, m4a, ogg, etc).
+
+# Payments
+stripe>=9.0.0,<11.0.0
